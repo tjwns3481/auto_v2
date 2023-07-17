@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/common.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>HTML 생성기</title>
+  </head>
+  <body>
+    <h1>HTML</h1>
+    <div class="list-container">
+      <form id="download_form" method="post" enctype="multipart/form-data">
+        <ul class="list-wrap">
+          <li class="list listImg">
+            <a>
+              <img src="" alt="" />
+              <input class="pick" id="pick0" type="file" name="image" />
+              <label for="pick0"></label>
+            </a>
+          </li>
+        </ul>
+        <ul class="add-wrap">
+          <li>
+            <a id="addImage">
+              <h3>이미지 추가</h3>
+              <img src="./images/icon_img.png" alt="" />
+            </a>
+          </li>
+          <li>
+            <a id="addBtn">
+              <h3>버튼추가</h3>
+              <img src="./images/icon_btn.png" alt="" />
+            </a>
+          </li>
+        </ul>
+        <input class="download" id="kiosk_download" type="submit" value="kiosk 다운로드" />
+        <input class="download" id="pc_download" type="submit" value="pc 다운로드" />
+        <input class="download" id="app_download" type="submit" value="app 다운로드" />
+      </form>
+    </div>
+    <script>
+      $(document).ready(function () {
+        const form = document.getElementById("download_form");
+
+        $("#app_download").on("click", function (e) {
+          form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            let linkIdx = "";
+            let linkType = "";
+            let linkUrl = "";
+            let normalTypeIdx = "";
+            let totalIdx = "";
+            $(".list").map((idx, list) => {
+              if ($(list).hasClass("listLink")) {
+                linkType = $(list).children(".input-wrap").children("select").val();
+                linkUrl = $(list).children(".input-wrap").children("input").val();
+                linkIdx += idx;
+              } else {
+                normalTypeIdx += idx;
+              }
+              totalIdx = $(".list").length;
+            });
+            const selectedOsType = `app?linkId=${linkIdx}`;
+
+            // 업로드를 처리할 엔드포인트 경로 설정
+            const uploadEndpoint = `/download_${selectedOsType}`;
+
+            // form 데이터를 서버로 전송
+            form.action = uploadEndpoint;
+            form.submit();
+          });
+        });
+
+        $("#pc_download").on("click", function (e) {
+          form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            let linkIdx = "";
+
+            $(".list").map((idx, list) => {
+              if ($(list).hasClass("listLink")) {
+                linkIdx += idx;
+              }
+            });
+            const selectedOsType = `pc?linkId=${linkIdx}`;
+
+            // 업로드를 처리할 엔드포인트 경로 설정
+            const uploadEndpoint = `/download_${selectedOsType}`;
+
+            // form 데이터를 서버로 전송
+            form.action = uploadEndpoint;
+            form.submit();
+          });
+        });
+
+        $("#kiosk_download").on("click", function (e) {
+          form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            let linkIdx = "";
+
+            $(".list").map((idx, list) => {
+              if ($(list).hasClass("listLink")) {
+                linkIdx += idx;
+              }
+            });
+            const selectedOsType = `kiosk?linkId=${linkIdx}`;
+
+            // 업로드를 처리할 엔드포인트 경로 설정
+            const uploadEndpoint = `/download_${selectedOsType}`;
+
+            // form 데이터를 서버로 전송
+            form.action = uploadEndpoint;
+            form.submit();
+          });
+        });
+
+        $("#addImage").click(function () {
+          makeLi();
+        });
+
+        $("#addBtn").click(function () {
+          makeLink();
+        });
+
+        $(".list-wrap").on("change", "input", function () {
+          const idx = $(this).parent().parent().index();
+          readURL(this, idx);
+        });
+      });
+
+      function readURL(input, idx) {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+            $(`.list-wrap > li:eq(${idx}) img`).attr("src", e.target.result);
+          };
+
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+
+      function makeLi() {
+        const list = document.querySelector(".list-wrap");
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        const img = document.createElement("img");
+        const input = document.createElement("input");
+        const label = document.createElement("label");
+        const button = document.createElement("a");
+        li.classList = "list listImg";
+        img.src = "";
+        a.href = "#none";
+        input.classList = "pick";
+        input.id = `pick${list.children.length}`;
+        input.type = "file";
+        input.name = "image";
+        label.htmlFor = `pick${list.children.length}`;
+        button.classList = "del-btn";
+        button.innerHTML = "삭제";
+        list.appendChild(li);
+        li.appendChild(a);
+        a.appendChild(img);
+        a.appendChild(input);
+        a.appendChild(label);
+        a.appendChild(button);
+
+        $(button).on("click", function () {
+          const target = $(this).parent().parent();
+          target.remove();
+        });
+      }
+
+      function makeLink() {
+        `
+                <div class="input-wrap">
+                  <select id="link-type" name="linkType">
+                    <option value="BrowserOpen">BrowserOpen</option>
+                    <option value="xBrowser">xBrowser</option>
+                    <option value="shopping">ShoppingNews</option>
+                    <option value="event">Event</option>
+                    <option value="coupon">Coupon</option>
+                    <option value="saeun">Saeun</option>
+                  </select>
+                  <input id="link-url" type="text" placeholder="url을 적어주세요" name="linkUrl" />
+                </div>
+              `;
+        const list = document.querySelector(".list-wrap");
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        const img = document.createElement("img");
+        const input = document.createElement("input");
+        const label = document.createElement("label");
+        const button = document.createElement("a");
+        const div = document.createElement("div");
+        const select = document.createElement("select");
+        const option1 = document.createElement("option");
+        const option2 = document.createElement("option");
+        const option3 = document.createElement("option");
+        const option4 = document.createElement("option");
+        const option5 = document.createElement("option");
+        const option6 = document.createElement("option");
+        const input2 = document.createElement("input");
+        div.classList = `input-wrap`;
+        select.id = `link-type${$(".list").length}`;
+        select.name = `linkType`;
+        option1.value = "BrowserOpen";
+        option2.value = "xBrowser";
+        option3.value = "shopping";
+        option4.value = "event";
+        option5.value = "coupon";
+        option6.value = "saeun";
+        option1.innerText = "BrowserOpen";
+        option2.innerText = "xBrowser";
+        option3.innerText = "shopping";
+        option4.innerText = "event";
+        option5.innerText = "coupon";
+        option6.innerText = "saeun";
+        input2.id = `link-url${$(".list").length}`;
+        input2.type = "text";
+        input2.placeholder = "url을 적어주세요.";
+        input2.name = `linkUrl`;
+        li.classList = "list listLink";
+        img.src = "";
+        a.href = "#none";
+        input.classList = "pick";
+        input.id = `pick${list.children.length}`;
+        input.type = "file";
+        input.name = "image";
+        label.htmlFor = `pick${list.children.length}`;
+        button.classList = "del-btn";
+        button.innerHTML = "삭제";
+        list.appendChild(li);
+        li.appendChild(a);
+        a.appendChild(img);
+        a.appendChild(input);
+        a.appendChild(label);
+        a.appendChild(button);
+        li.appendChild(div);
+        div.appendChild(select);
+        select.appendChild(option1);
+        select.appendChild(option2);
+        select.appendChild(option3);
+        select.appendChild(option4);
+        select.appendChild(option5);
+        select.appendChild(option6);
+        div.appendChild(input2);
+
+        $(button).on("click", function () {
+          const target = $(this).parent().parent();
+          target.remove();
+        });
+      }
+    </script>
+  </body>
+</html>

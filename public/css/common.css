@@ -1,0 +1,330 @@
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+html {
+  padding-bottom: 10vw;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+body {
+  padding: 5vw;
+}
+h1 {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 10vw;
+}
+img {
+  width: 100%;
+}
+.list-container {
+  width: 100%;
+  height: 100%;
+}
+
+.list-container .list-wrap {
+  font-size: 0;
+  border: 1px solid #cccccc;
+  width: 100%;
+  height: 100%;
+}
+
+.list-container .list-wrap .list {
+  overflow: hidden;
+  position: relative;
+  min-height: 30vw;
+  height: auto;
+}
+
+.list-container .list-wrap .list > a {
+  transition: all 0.5s;
+  display: inline-block;
+  width: 100%;
+  height: auto;
+}
+
+.list-container .list-wrap .pick {
+  display: inline-block;
+  width: 100%;
+}
+.list-wrap input[type="file"] {
+  position: absolute;
+  left: 0;
+  height: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+}
+.list-wrap label {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  left: 0;
+  top: 0;
+}
+.list-wrap label:hover::before {
+  position: absolute;
+  z-index: 110;
+  top: 50%;
+  left: 50%;
+  width: 8vw;
+  height: 8vw;
+  background-image: url("../images/icon_img.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  font-size: 3rem;
+  content: "";
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+.list-wrap label:hover::after {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  left: 0;
+  line-height: 30vw;
+  z-index: 111;
+}
+.listLink label {
+  height: calc(100% - 5vw);
+}
+
+.add-wrap {
+  margin-top: 5vw;
+  width: 100%;
+  height: 15vw;
+  border: 1px solid #cccccc;
+  border-radius: 5vw;
+  font-size: 0;
+}
+.add-wrap li {
+  position: relative;
+  display: inline-block;
+  width: calc(100% - 25%);
+  height: 100%;
+}
+.add-wrap li:first-of-type {
+  width: 25%;
+}
+.add-wrap li:first-of-type img {
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.add-wrap li:first-of-type h3 {
+  display: inline-block;
+  bottom: 20%;
+}
+.add-wrap li a {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+.add-wrap li h3 {
+  position: absolute;
+  width: 100%;
+  font-size: 3vw;
+  text-align: center;
+  color: black;
+}
+
+.add-wrap li:nth-of-type(2) h3 {
+  width: auto;
+}
+
+.add-wrap li:nth-of-type(2) img {
+  left: 0;
+}
+.add-wrap li img {
+  position: absolute;
+  left: 50%;
+  width: 5vw;
+  height: 5vw;
+}
+
+.download {
+  cursor: pointer;
+  margin-top: 5vw;
+  padding: 1vw 3vw;
+  float: right;
+  background-color: transparent;
+  border-radius: 5vw;
+  border: 1px solid #cccccc;
+}
+
+.del-btn {
+  position: absolute;
+  display: inline-block;
+  right: 2vw;
+  top: 2vw;
+  width: 5vw;
+  height: 5vw;
+  content: "X";
+  display: inline-block;
+  z-index: 1111 !important;
+  background-image: url("../images/icon_remove.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.input-wrap {
+  width: 100%;
+  position: absolute;
+  height: 5vw;
+  bottom: 0;
+  font-size: 0;
+  text-align: center;
+}
+#link-type {
+  box-sizing: border-box;
+  height: 5vw;
+  display: inline-block;
+}
+#link-url {
+  box-sizing: border-box;
+  padding: 0 !important;
+  height: 5vw;
+}
+
+#addBtn {
+  width: 40%;
+}
+#addBtn h3 {
+  position: absolute;
+  bottom: 20%;
+  left: 10%;
+}
+
+#addBtn img {
+  left: 15%;
+  top: 30%;
+  transform: translateY(-50%);
+}
+
+input.download + input.download {
+  margin-right: 3vw;
+}
