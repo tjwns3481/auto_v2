@@ -282,6 +282,6 @@ osTypes.forEach((t) => {
   });
 });
 
-app.listen(process.env.PORT, () => {
+app.listen(3000, () => {
   console.log("Server started on port 3000");
 });
