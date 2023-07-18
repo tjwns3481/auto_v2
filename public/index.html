@@ -62,7 +62,7 @@
               }
               totalIdx = $(".list").length;
             });
-            const selectedOsType = `app?linkId=${linkIdx}`;
+            const selectedOsType = `app?linkId=${linkIdx}&normalTypeIdx=${normalTypeIdx}&totalIdx=${totalIdx}`;
 
             // 업로드를 처리할 엔드포인트 경로 설정
             const uploadEndpoint = `/download_${selectedOsType}`;
@@ -77,13 +77,21 @@
           form.addEventListener("submit", (e) => {
             e.preventDefault();
             let linkIdx = "";
-
+            let linkType = "";
+            let linkUrl = "";
+            let normalTypeIdx = "";
+            let totalIdx = "";
             $(".list").map((idx, list) => {
               if ($(list).hasClass("listLink")) {
+                linkType = $(list).children(".input-wrap").children("select").val();
+                linkUrl = $(list).children(".input-wrap").children("input").val();
                 linkIdx += idx;
+              } else {
+                normalTypeIdx += idx;
               }
+              totalIdx = $(".list").length;
             });
-            const selectedOsType = `pc?linkId=${linkIdx}`;
+            const selectedOsType = `pc?linkId=${linkIdx}&normalTypeIdx=${normalTypeIdx}&totalIdx=${totalIdx}`;
 
             // 업로드를 처리할 엔드포인트 경로 설정
             const uploadEndpoint = `/download_${selectedOsType}`;
@@ -98,13 +106,21 @@
           form.addEventListener("submit", (e) => {
             e.preventDefault();
             let linkIdx = "";
-
+            let linkType = "";
+            let linkUrl = "";
+            let normalTypeIdx = "";
+            let totalIdx = "";
             $(".list").map((idx, list) => {
               if ($(list).hasClass("listLink")) {
+                linkType = $(list).children(".input-wrap").children("select").val();
+                linkUrl = $(list).children(".input-wrap").children("input").val();
                 linkIdx += idx;
+              } else {
+                normalTypeIdx += idx;
               }
+              totalIdx = $(".list").length;
             });
-            const selectedOsType = `kiosk?linkId=${linkIdx}`;
+            const selectedOsType = `kiosk?linkId=${linkIdx}&normalTypeIdx=${normalTypeIdx}&totalIdx=${totalIdx}`;
 
             // 업로드를 처리할 엔드포인트 경로 설정
             const uploadEndpoint = `/download_${selectedOsType}`;

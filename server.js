@@ -4,7 +4,6 @@ const app = express();
 const path = require("path");
 const fs = require("fs");
 const archiver = require("archiver");
-const axios = require("axios");
 const desktopPath = path.join(__dirname, "uploads");
 
 // Set file name
@@ -29,6 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 osTypes.forEach((t) => {
   // Set ready dir
   const dirPath = path.join(desktopPath, `html_${realDate}sn_${t}`);
+
   fs.mkdirSync(dirPath, { recursive: true });
   fs.mkdirSync(path.join(dirPath, "css"), { recursive: true });
   fs.mkdirSync(path.join(dirPath, "images"), { recursive: true });
@@ -42,7 +42,7 @@ osTypes.forEach((t) => {
     },
     filename: (req, file, cb) => {
       extName.push(path.extname(file.originalname));
-      cb(null, "img0" + req.files.length + path.extname(file.originalname));
+      cb(null, "img" + req.files.length + path.extname(file.originalname));
     },
   });
 
@@ -50,22 +50,48 @@ osTypes.forEach((t) => {
 
   app.post(`/download_${t}`, upload.array("image"), (req, res) => {
     newHtmlLink = ""; //linkSetting 초기화
+    newHtmlImg = "";
     const linkId = req.query.linkId.split("");
+    const normalId = req.query.normalTypeIdx.split("");
+    const total = linkId.length + normalId.length;
 
-    if (linkId.length < 2) {
-      newHtmlLink = `LinkSetting("link1", "${req.body.linkType}", "yes", "${req.body.linkUrl}");`; //linkId 의 값이 한개일때
-    } else {
-      linkId.map((item, idx) => {
-        newHtmlLink += `LinkSetting("link${idx + 1}", "${req.body.linkType[idx]}", "yes", "${req.body.linkUrl[idx]}");
-`; //linkId 의 값이 여러개일때
+    if (t !== "kiosk") {
+      //linkSetting
+      if (linkId.length < 2) {
+        newHtmlLink = `LinkSetting("link1", "${req.body.linkType}", "yes", "${req.body.linkUrl}");`; //linkId 의 값이 한개일때
+      } else {
+        linkId.map((item, idx) => {
+          newHtmlLink += `LinkSetting("link${item}", "${req.body.linkType[idx]}", "yes", "${req.body.linkUrl[idx]}");
+        `; //linkId 의 값이 여러개일때
+        });
+      }
+    }
+
+    for (let i = 0; i < total; i++) {
+      if (t !== "kiosk") {
+        linkId.map((item, idx) => {
+          if (i == item) {
+            newHtmlImg += `
+      <a href="#none" id="link${i}">
+        <img src="./images/img${i + 1}${extName[0]}"/>
+      </a>
+`;
+          }
+        });
+      }
+
+      normalId.map((item, idx) => {
+        if (i == item) {
+          newHtmlImg += `
+      <div class="img_box">
+        <img src="./images/img${i + 1}${extName[0]}"/>
+      </div>
+`;
+        }
       });
     }
 
-    console.log(newHtmlLink);
-    res.sendFile(path.join(__dirname, "public/index.html"));
-  });
-
-  const newHtml = `
+    const newHtml = `
     <!DOCTYPE html>
     <html lang="en">
       <head>
@@ -99,8 +125,7 @@ osTypes.forEach((t) => {
       </body>
     </html>
     `;
-  console.log(newHtmlLink);
-  const newCss = `
+    const newCss = `
     html, body, div, span, applet, object, iframe,
     h1, h2, h3, h4, h5, h6, p, blockquote, pre,
     a, abbr, acronym, address, big, cite, code,
@@ -127,7 +152,7 @@ osTypes.forEach((t) => {
     img{width:100%; display:block}
     #link1 {display:block;}
     `;
-  const newJs = `function LinkSetting(obj, type, newWindow, link_val) {
+    const newJs = `function LinkSetting(obj, type, newWindow, link_val) {
       var filter = "win16|win32|win64|mac|macintel";
     
       var pcweb_url = "";
@@ -199,6 +224,62 @@ osTypes.forEach((t) => {
       }
     }
     `;
+
+    // Write the new HTML file
+    fs.writeFile(`${desktopPath}/html_${realDate}sn_${t}/index.html`, newHtml, (err) => {
+      if (err) {
+        console.err;
+      } else {
+        return;
+      }
+    });
+
+    // Write the new CSS file
+    fs.writeFile(`${desktopPath}/html_${realDate}sn_${t}/css/event.css`, newCss, (err) => {
+      if (err) {
+        console.err;
+      } else {
+        return;
+      }
+    });
+
+    // Write the new JS file
+    fs.writeFile(`${desktopPath}/html_${realDate}sn_${t}/js/link.js`, newJs, (err) => {
+      if (err) {
+        console.err;
+      } else {
+        return;
+      }
+    });
+
+    const folderPath = path.join(desktopPath + `/html_${realDate}sn_${t}`);
+
+    if (!fs.existsSync(folderPath)) {
+      return res.status(404).send("Folder not Found");
+    }
+
+    const archive = archiver("zip", {
+      zlib: { level: 7 },
+    });
+
+    archive.on("error", (err) => {
+      res.status(500).send({ error: err.message });
+    });
+
+    archive.on("end", () => {
+      console.log("압축완료");
+      res.end();
+    });
+
+    res.attachment(`html_${realDate}sn_${t}.zip`);
+    res.setHeader("Content-Type", "application/zip");
+
+    archive.pipe(res);
+
+    archive.directory(folderPath, false);
+
+    archive.finalize();
+  });
 });
 
 app.listen(8080, () => {
