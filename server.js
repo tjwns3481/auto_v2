@@ -4,6 +4,7 @@ const app = express();
 const path = require("path");
 const fs = require("fs");
 const archiver = require("archiver");
+const schedule = require("node-schedule");
 const desktopPath = path.join(__dirname, "uploads");
 
 // Set file name
@@ -22,12 +23,20 @@ let osTypes = ["app", "pc", "kiosk"];
 let newHtmlLink = ``;
 let newHtmlImg = ``;
 
-app.use(express.static(path.join(__dirname, "public"))); // Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 osTypes.forEach((t) => {
-  // Set ready dir
   const dirPath = path.join(desktopPath, `html_${realDate}sn_${t}`);
+
+  schedule.scheduleJob("01 24 * * *", function () {
+    console.log("디렉토리 생성");
+    fs.mkdirSync(dirPath, { recursive: true });
+    fs.mkdirSync(path.join(dirPath, "css"), { recursive: true });
+    fs.mkdirSync(path.join(dirPath, "images"), { recursive: true });
+    fs.mkdirSync(path.join(dirPath, "js"), { recursive: true });
+  });
+  // Set ready dir
 
   fs.mkdirSync(dirPath, { recursive: true });
   fs.mkdirSync(path.join(dirPath, "css"), { recursive: true });
@@ -50,7 +59,7 @@ osTypes.forEach((t) => {
 
   app.post(`/download_${t}`, upload.array("image"), (req, res) => {
     newHtmlLink = ""; //linkSetting 초기화
-    newHtmlImg = "";
+    newHtmlImg = ""; //imgBox 초기화
     const linkId = req.query.linkId.split("");
     const normalId = req.query.normalTypeIdx.split("");
     const total = linkId.length + normalId.length;
@@ -58,11 +67,11 @@ osTypes.forEach((t) => {
     if (t !== "kiosk") {
       //linkSetting
       if (linkId.length < 2) {
-        newHtmlLink = `LinkSetting("link1", "${req.body.linkType}", "yes", "${req.body.linkUrl}");`; //linkId 의 값이 한개일때
+        newHtmlLink = `LinkSetting("link1", "${req.body.linkType}", "yes", "${req.body.linkUrl}");`; //버튼 한개일때
       } else {
         linkId.map((item, idx) => {
           newHtmlLink += `LinkSetting("link${item}", "${req.body.linkType[idx]}", "yes", "${req.body.linkUrl[idx]}");
-        `; //linkId 의 값이 여러개일때
+        `; //버튼이 여러개일때
         });
       }
     }
