@@ -125,9 +125,7 @@ osTypes.forEach((t) => {
         <div class="canvas">
           <div class="container">
             <div class="eventBox">
-              <div class="img_box">
-                ${newHtmlImg}
-              </div>
+              ${newHtmlImg}
             </div>
           </div>
         </div>

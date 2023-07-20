@@ -126,6 +126,7 @@ table {
   border-spacing: 0;
 }
 body {
+  overflow-x: hidden;
   padding: 5vw;
 }
 h1 {
@@ -151,7 +152,7 @@ img {
 .list-container .list-wrap .list {
   overflow: hidden;
   position: relative;
-  min-height: 30vw;
+  min-height: 13vw;
   height: auto;
 }
 
@@ -211,7 +212,16 @@ img {
 .listLink label {
   height: calc(100% - 5vw);
 }
-
+.listTab {
+  display: flex;
+  width: 100%;
+}
+.listTab a {
+  position: relative;
+}
+.listTab label {
+  width: 100%;
+}
 .add-wrap {
   margin-top: 5vw;
   width: 100%;
@@ -223,18 +233,16 @@ img {
 .add-wrap li {
   position: relative;
   display: inline-block;
-  width: calc(100% - 25%);
+  width: 33.33%;
   height: 100%;
 }
-.add-wrap li:first-of-type {
-  width: 25%;
-}
-.add-wrap li:first-of-type img {
+
+.add-wrap li img {
   top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
-.add-wrap li:first-of-type h3 {
+.add-wrap li h3 {
   display: inline-block;
   bottom: 20%;
 }
@@ -251,13 +259,10 @@ img {
   color: black;
 }
 
-.add-wrap li:nth-of-type(2) h3 {
-  width: auto;
+.add-wrap li h3 {
+  width: 100%;
 }
 
-.add-wrap li:nth-of-type(2) img {
-  left: 0;
-}
 .add-wrap li img {
   position: absolute;
   left: 50%;
@@ -269,7 +274,6 @@ img {
   cursor: pointer;
   margin-top: 5vw;
   padding: 1vw 3vw;
-  float: right;
   background-color: transparent;
   border-radius: 5vw;
   border: 1px solid #cccccc;
@@ -291,6 +295,20 @@ img {
   background-size: cover;
 }
 
+.listTab .del-btn {
+  position: absolute;
+  width: 5vw !important;
+  height: 5vw !important;
+  right: 2vw;
+  top: 2vw;
+  content: "X";
+  display: inline-block;
+  z-index: 1111 !important;
+  background-image: url("../images/icon_remove.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
 .input-wrap {
   width: 100%;
   position: absolute;
@@ -310,21 +328,113 @@ img {
   height: 5vw;
 }
 
-#addBtn {
-  width: 40%;
+.download-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
-#addBtn h3 {
+.download-wrap input {
+  margin: 5vw;
+}
+
+.tab-wrap {
+  opacity: 0;
+  margin-top: 3vw;
   position: absolute;
-  bottom: 20%;
-  left: 10%;
+  right: -50vw;
+  width: calc(33.33% - 5vw);
+  height: 30vw;
+  border-radius: 5vw;
+  background-color: #eee;
 }
 
-#addBtn img {
-  left: 15%;
-  top: 30%;
-  transform: translateY(-50%);
+.tab-wrap .tab-close {
+  position: absolute;
+  right: 2vw;
+  top: 2vw;
+  width: 5vw;
+  z-index: 11;
 }
 
-input.download + input.download {
-  margin-right: 3vw;
+.tab-wrap .tab-input-wrap {
+  position: relative;
+  padding: 10vw 0 0 10vw;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.tab-wrap .tab-input-wrap select {
+  position: absolute;
+  right: 2vw;
+}
+
+.tab-wrap .tab-input-wrap .tab-size {
+  width: 14vw;
+  right: 2vw;
+  margin-top: 5vw;
+  position: absolute;
+}
+
+.tab-wrap span {
+  font-size: 0.8rem;
+}
+.tab-wrap .tab-text1 {
+  position: absolute;
+  left: 1vw;
+  margin-top: 1vw;
+}
+.tab-wrap .tab-text2 {
+  position: absolute;
+  margin-top: 6vw;
+  left: 1vw;
+}
+.tab-wrap .tab-done {
+  position: absolute;
+  bottom: 1vw;
+  text-align: center;
+  width: 10vw;
+  padding: 3vw 5vw;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tab-area {
+  width: 100%;
+}
+.tab-menu {
+  font-size: 0;
+  display: flex;
+}
+.tab-menu a {
+  width: 100%;
+  height: 10vw;
+  font-size: 3vw;
+  line-height: 10vw;
+  text-align: center;
+  text-decoration: none;
+}
+.tab-menu a.on {
+  color: royalblue;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.tab-menu a:last-child {
+  margin-right: 0;
+}
+
+.tab-menu a img {
+  vertical-align: middle;
+  width: 100%;
+  height: 100%;
+}
+
+.hidden-area {
+  display: none;
+}
+.hidden-area img {
+  width: 100%;
+}
+.hidden-area.on {
+  display: block;
+  width: 100%;
+  height: 100%;
 }

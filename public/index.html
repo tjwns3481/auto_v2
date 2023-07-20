@@ -34,10 +34,33 @@
               <img src="./images/icon_btn.png" alt="" />
             </a>
           </li>
+          <li>
+            <a id="addTab">
+              <h3>탭추가</h3>
+              <img src="./images/icon_tab.png" alt="" />
+            </a>
+          </li>
         </ul>
-        <input class="download" id="kiosk_download" type="submit" value="kiosk 다운로드" />
-        <input class="download" id="pc_download" type="submit" value="pc 다운로드" />
-        <input class="download" id="app_download" type="submit" value="app 다운로드" />
+        <div class="tab-wrap">
+          <div class="tab-close" onclick="">
+            <img src="./images/icon_remove.png" alt="" />
+          </div>
+          <div class="tab-input-wrap">
+            <span class="tab-text1">탭 타입</span>
+            <span class="tab-text2">탭 개수</span>
+            <select name="tabType" id="tabType">
+              <option value="normal">일반</option>
+              <option value="slide">슬라이드</option>
+            </select>
+            <input class="tab-size" id="tabSize" name="tabSize" type="number" value="2" min="2" max="9" />
+          </div>
+          <div class="tab-done" onclick="">확인</div>
+        </div>
+        <div class="download-wrap">
+          <input class="download" id="app_download" type="submit" value="app 다운로드" />
+          <input class="download" id="pc_download" type="submit" value="pc 다운로드" />
+          <input class="download" id="kiosk_download" type="submit" value="kiosk 다운로드" />
+        </div>
       </form>
     </div>
     <script>
@@ -139,18 +162,44 @@
           makeLink();
         });
 
+        $("#addTab").click(function () {
+          const tabWrap = $(".tab-wrap");
+          tabWrap.animate({ opacity: 1, right: "5vw" });
+        });
+
+        $(".tab-close").click(function () {
+          $(".tab-wrap").animate({ right: "-50vw" });
+        });
+
+        $(".tab-done").click(function () {
+          $(".tab-wrap").animate({ right: "-50vw" });
+
+          const tabType = $("#tabType").val();
+          const tabSize = $("#tabSize").val();
+          makeTab(tabType, tabSize);
+        });
+
         $(".list-wrap").on("change", "input", function () {
-          const idx = $(this).parent().parent().index();
-          readURL(this, idx);
+          const parent = $(this).parent().parent();
+          const child = $(this).parent();
+          const childIdx = child.index();
+          const idx = parent.index();
+          console.log(childIdx);
+
+          readURL(this, idx, childIdx);
         });
       });
 
-      function readURL(input, idx) {
+      function readURL(input, idx, childIdx) {
         if (input.files && input.files[0]) {
           var reader = new FileReader();
 
           reader.onload = function (e) {
-            $(`.list-wrap > li:eq(${idx}) img`).attr("src", e.target.result);
+            if ($(input).parent().parent().hasClass("listTab")) {
+              $(`.list-wrap > li:eq(${idx}) > a:eq(${childIdx}) img`).attr("src", e.target.result);
+            } else {
+              $(`.list-wrap > li:eq(${idx}) img`).attr("src", e.target.result);
+            }
           };
 
           reader.readAsDataURL(input.files[0]);
@@ -159,6 +208,7 @@
 
       function makeLi() {
         const list = document.querySelector(".list-wrap");
+        const tabList = document.querySelector(".hidden-area.on");
         const li = document.createElement("li");
         const a = document.createElement("a");
         const img = document.createElement("img");
@@ -175,13 +225,22 @@
         label.htmlFor = `pick${list.children.length}`;
         button.classList = "del-btn";
         button.innerHTML = "삭제";
-        list.appendChild(li);
-        li.appendChild(a);
-        a.appendChild(img);
-        a.appendChild(input);
-        a.appendChild(label);
-        a.appendChild(button);
 
+        if ($(".list-wrap").children().hasClass("tab-area")) {
+          tabList.appendChild(li);
+          li.appendChild(a);
+          a.appendChild(img);
+          a.appendChild(input);
+          a.appendChild(label);
+          a.appendChild(button);
+        } else {
+          list.appendChild(li);
+          li.appendChild(a);
+          a.appendChild(img);
+          a.appendChild(input);
+          a.appendChild(label);
+          a.appendChild(button);
+        }
         $(button).on("click", function () {
           const target = $(this).parent().parent();
           target.remove();
@@ -189,20 +248,8 @@
       }
 
       function makeLink() {
-        `
-                <div class="input-wrap">
-                  <select id="link-type" name="linkType">
-                    <option value="BrowserOpen">BrowserOpen</option>
-                    <option value="xBrowser">xBrowser</option>
-                    <option value="shopping">ShoppingNews</option>
-                    <option value="event">Event</option>
-                    <option value="coupon">Coupon</option>
-                    <option value="saeun">Saeun</option>
-                  </select>
-                  <input id="link-url" type="text" placeholder="url을 적어주세요" name="linkUrl" />
-                </div>
-              `;
         const list = document.querySelector(".list-wrap");
+        const tabList = document.querySelector(".hidden-area.on");
         const li = document.createElement("li");
         const a = document.createElement("a");
         const img = document.createElement("img");
@@ -247,25 +294,128 @@
         label.htmlFor = `pick${list.children.length}`;
         button.classList = "del-btn";
         button.innerHTML = "삭제";
-        list.appendChild(li);
-        li.appendChild(a);
-        a.appendChild(img);
-        a.appendChild(input);
-        a.appendChild(label);
-        a.appendChild(button);
-        li.appendChild(div);
-        div.appendChild(select);
-        select.appendChild(option1);
-        select.appendChild(option2);
-        select.appendChild(option3);
-        select.appendChild(option4);
-        select.appendChild(option5);
-        select.appendChild(option6);
-        div.appendChild(input2);
+        if ($(".list-wrap").children().hasClass("tab-area")) {
+          tabList.appendChild(li);
+          li.appendChild(a);
+          a.appendChild(img);
+          a.appendChild(input);
+          a.appendChild(label);
+          a.appendChild(button);
+          li.appendChild(div);
+          div.appendChild(select);
+          select.appendChild(option1);
+          select.appendChild(option2);
+          select.appendChild(option3);
+          select.appendChild(option4);
+          select.appendChild(option5);
+          select.appendChild(option6);
+          div.appendChild(input2);
+        } else {
+          list.appendChild(li);
+          li.appendChild(a);
+          a.appendChild(img);
+          a.appendChild(input);
+          a.appendChild(label);
+          a.appendChild(button);
+          li.appendChild(div);
+          div.appendChild(select);
+          select.appendChild(option1);
+          select.appendChild(option2);
+          select.appendChild(option3);
+          select.appendChild(option4);
+          select.appendChild(option5);
+          select.appendChild(option6);
+          div.appendChild(input2);
+        }
 
         $(button).on("click", function () {
           const target = $(this).parent().parent();
           target.remove();
+        });
+      }
+
+      function makeTab(type, size) {
+        const list = document.querySelector(".list-wrap");
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        const img = document.createElement("img");
+        const input = document.createElement("input");
+        const label = document.createElement("label");
+        const button = document.createElement("a");
+        let hiddenArea = "";
+        let tabMenu = "";
+        li.classList = "list listTab";
+        button.classList = "del-btn";
+        button.innerHTML = "삭제";
+
+        list.appendChild(li);
+        li.appendChild(button);
+
+        console.log(size);
+        if (type == "normal") {
+          //일반타입
+          for (let i = 0; i < size; i++) {
+            $(li).append(`
+                <a href="#none">
+                  <img src=""/>
+                  <input id="pick${list.children.length}_${i + 1}" type="file" name="image"/>
+                  <label for="pick${list.children.length}_${i + 1}"></label>
+                </a>
+            `);
+            if (i > 0) {
+              hiddenArea += `
+                <div class="hidden-area">
+
+                </div>
+              `;
+              tabMenu += `
+                <a class="" href="#none">탭${i + 1}번보기</a>
+              `;
+            }
+          }
+        } else {
+          //slide타입
+        }
+
+        $(list).append(`
+          <div class="tab-area">
+            <div class="tab-menu">
+              <a class="on" href="#none">탭1번보기</a>
+              ${tabMenu}
+            </div>
+
+            <div class="hidden-area on">
+            </div>
+            ${hiddenArea}
+          </div>
+        `);
+
+        $(".tab-menu a").on("click", function () {
+          let a = $(this);
+          let idx = a.index();
+          let box = a.closest(".tab-area");
+
+          box.find(".hidden-area").removeClass("on");
+          box.find(".tab-menu a").removeClass("on");
+          box.find(".hidden-area:eq(" + idx + ")").addClass("on");
+          a.addClass("on");
+
+          setTimeout(function () {
+            var parentIframe = $("#container", parent.document).find("iframe"),
+              iframeHeight = $(".eventBox").innerHeight();
+
+            $(parentIframe)
+              .height(iframeHeight + 17)
+              .css("min-height", "auto");
+          }, 100);
+
+          return false;
+        });
+
+        $(button).click(function () {
+          const target = $(this).parent();
+          target.remove();
+          $(".tab-area").remove();
         });
       }
     </script>
