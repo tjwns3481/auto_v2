@@ -73,9 +73,10 @@ osTypes.forEach((t) => {
         linkId.map((item, idx) => {
           if (i == item) {
             newHtmlImg += `
-      <a href="#none" id="link${item}">
-        <img src="./images/img${i + 1}${extName[0]}"/>
-      </a>`;
+              <a href="#none" id="link${item}">
+                <img src="./images/img${i + 1}${extName[0]}"/>
+              </a>
+            `;
           }
         });
       }
@@ -83,9 +84,10 @@ osTypes.forEach((t) => {
       normalId.map((item, idx) => {
         if (i == item) {
           newHtmlImg += `
-      <div class="img_box">
-        <img src="./images/img${i + 1}${extName[0]}"/>
-      </div>`;
+            <div class="img_box">
+              <img src="./images/img${i + 1}${extName[0]}"/>
+            </div>
+          `;
         }
       });
     }
@@ -119,6 +121,29 @@ osTypes.forEach((t) => {
             </div>
           </div>
         </div>
+        <script>
+          $(".tab-menu a").on("click", function () {
+            let a = $(this);
+            let idx = a.index();
+            let box = a.closest(".tab-area");
+
+            box.find(".hidden-area").removeClass("on");
+            box.find(".tab-menu a").removeClass("on");
+            box.find(".hidden-area:eq(" + idx + ")").addClass("on");
+            a.addClass("on");
+
+            setTimeout(function () {
+              var parentIframe = $("#container", parent.document).find("iframe"),
+                iframeHeight = $(".eventBox").innerHeight();
+
+              $(parentIframe)
+                .height(iframeHeight + 17)
+                .css("min-height", "auto");
+            }, 100);
+
+            return false;
+          });
+        </script>
       </body>
     </html>
     `;
@@ -148,6 +173,20 @@ osTypes.forEach((t) => {
     .eventBox {width:100%; overflow-x:hidden;}
     img{width:100%; display:block}
     #link1 {display:block;}
+    /* tab-menu */
+    .tab-menu {display:flex;font-size: 0;overflow:hidden;}
+    .tab-menu a {display: block;}
+    .tab-menu a img{display:block;vertical-align: middle;height:17.3333vw;}
+    .tab-menu a img:last-of-type{display: none;}
+    .tab-menu a.on img:first-of-type {display: none;}
+    .tab-menu a.on img:last-of-type{display: block;}
+    .hidden-area {width: 100%;display:none;}
+    .hidden-area img {
+      width: 100%;
+    }
+    .hidden-area.on {
+      display:inline-block;
+    }
     `;
     const newJs = `function LinkSetting(obj, type, newWindow, link_val) {
       var filter = "win16|win32|win64|mac|macintel";
