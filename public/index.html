@@ -194,11 +194,12 @@
           var reader = new FileReader();
 
           reader.onload = function (e) {
-            // console.log("input.files = " + input.files);
-            // console.log("input.files[0] = " + input.files[0]);
-            // console.log("input.files[1] = " + input.files[1]);
-            if ($(input).parent().parent().hasClass("listTab")) {
-              $(`.list-wrap > li:eq(${idx}) > a:eq(${childIdx}) img`).attr("src", e.target.result);
+            if ($(input).parent().parent().parent().hasClass("hidden-area")) {
+              // console.log($(`.list-wrap .tab-area .hidden-area.on .list:eq(${idx}) img`));
+              console.log($(input).parent().parent().index());
+              $(`.list-wrap .tab-area .hidden-area.on .list:eq(${idx}) img`).attr("src", e.target.result);
+            } else if ($(input).parent().hasClass("tab_btn")) {
+              $(`.list-wrap .tab_a:eq(${idx - 1}) > .tab_btn:eq(${childIdx}) img`).attr("src", e.target.result);
             } else {
               $(`.list-wrap > li:eq(${idx}) img`).attr("src", e.target.result);
             }
@@ -217,14 +218,24 @@
         const input = document.createElement("input");
         const label = document.createElement("label");
         const button = document.createElement("a");
+        const length = $(".hidden-area").children("li").length;
+
         li.classList = "list listImg";
         img.src = "";
         a.href = "#none";
         input.classList = "pick";
-        input.id = `pick${list.children.length}`;
+
+        if ($(list).children().hasClass("listTab")) {
+          input.id = `pick${length + 1}`;
+          label.htmlFor = `pick${length + 1}`;
+        } else {
+          input.id = `pick${list.children.length}`;
+          label.htmlFor = `pick${list.children.length}`;
+        }
+
         input.type = "file";
         input.name = "image";
-        label.htmlFor = `pick${list.children.length}`;
+
         button.classList = "del-btn";
         button.innerHTML = "삭제";
 
@@ -265,6 +276,8 @@
         const option5 = document.createElement("option");
         const option6 = document.createElement("option");
         const input2 = document.createElement("input");
+        const length = $(".hidden-area").children("li").length;
+
         div.classList = `input-wrap`;
         select.classList = `linkType`;
         select.id = `link-type${$(".list").length}`;
@@ -282,6 +295,15 @@
         option5.innerText = "coupon";
         option6.innerText = "saeun";
         input2.classList = `linkUrl`;
+
+        if ($(list).children().hasClass("listTab")) {
+          input.id = `pick_link${length + 1}`;
+          label.htmlFor = `pick_link${length + 1}`;
+        } else {
+          input.id = `pick_link${list.children.length}`;
+          label.htmlFor = `pick_link${list.children.length}`;
+        }
+
         input2.id = `link-url${$(".list").length}`;
         input2.type = "text";
         input2.placeholder = "url을 적어주세요.";
@@ -290,10 +312,8 @@
         img.src = "";
         a.href = "#none";
         input.classList = "pick";
-        input.id = `pick${list.children.length}`;
         input.type = "file";
         input.name = "image";
-        label.htmlFor = `pick${list.children.length}`;
         button.classList = "del-btn";
         button.innerHTML = "삭제";
 
@@ -353,10 +373,17 @@
           //일반타입
           for (let i = 0; i < size; i++) {
             $(li).append(`
-                <a href="#none">
-                  <img src=""/>
-                  <input id="pick${list.children.length}_${i + 1}" type="file" multiple="multiple" name="image[]"/>
-                  <label for="pick${list.children.length}_${i + 1}"></label>
+                <a class="tab_a" href="#none">
+                  <div class="tab_btn tab_off">
+                    <img src=""/>
+                    <input id="tab${list.children.length}_${i + 1}" type="file" multiple="multiple" name="image"/>
+                    <label for="tab${list.children.length}_${i + 1}"></label>
+                  </div>
+                  <div class="tab_btn tab_on">
+                    <img src=""/>
+                    <input id="tab_on${list.children.length}_${i + 1}" type="file" multiple="multiple" name="image"/>
+                    <label for="tab_on${list.children.length}_${i + 1}"></label>
+                  </div>
                 </a>
             `);
             if (i > 0) {

@@ -23,26 +23,13 @@ const osTypes = ["app", "pc", "kiosk"];
 let newHtmlLink = ``;
 let newHtmlImg = ``;
 
-let mkdirIntime = () => {};
-
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 osTypes.forEach((t) => {
   const dirPath = path.join(desktopPath, `html_${realDate}sn_${t}`);
 
-  mkdirIntime = () => {
-    schedule.scheduleJob("01 24 * * *", function () {
-      console.log("디렉토리 생성");
-      fs.mkdirSync(dirPath, { recursive: true });
-      fs.mkdirSync(path.join(dirPath, "css"), { recursive: true });
-      fs.mkdirSync(path.join(dirPath, "images"), { recursive: true });
-      fs.mkdirSync(path.join(dirPath, "js"), { recursive: true });
-    });
-  };
-
   // Set ready dir
-
   fs.mkdirSync(dirPath, { recursive: true });
   fs.mkdirSync(path.join(dirPath, "css"), { recursive: true });
   fs.mkdirSync(path.join(dirPath, "images"), { recursive: true });
@@ -291,7 +278,6 @@ osTypes.forEach((t) => {
     archive.finalize();
   });
 });
-mkdirIntime();
 
 app.listen(3000, () => {
   console.log("Server started on port 3000");

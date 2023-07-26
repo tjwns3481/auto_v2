@@ -220,6 +220,38 @@ img {
 .listTab label {
   width: 100%;
 }
+.listTab .tab_off {
+  position: relative;
+  display: block;
+  min-height: 13vw;
+  height: 50%;
+}
+.listTab .tab_on {
+  position: relative;
+  display: block;
+  min-height: 13vw;
+  height: 50%;
+}
+.listTab .tab_off label::before {
+  content: "비활성 탭 첨부";
+  color: white;
+  background: none;
+  width: 100%;
+  height: 5vw;
+  font-size: 15px;
+  z-index: 11111;
+}
+
+.listTab .tab_on label::before {
+  content: "활성 탭 첨부";
+  color: white;
+  background: none;
+  width: 100%;
+  height: 5vw;
+  font-size: 15px;
+  z-index: 11111;
+}
+
 .add-wrap {
   margin-top: 5vw;
   width: 100%;
