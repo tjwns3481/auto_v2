@@ -184,7 +184,6 @@
           const child = $(this).parent();
           const childIdx = child.index();
           const idx = parent.index();
-          console.log(childIdx);
 
           readURL(this, idx, childIdx);
         });
@@ -267,6 +266,7 @@
         const option6 = document.createElement("option");
         const input2 = document.createElement("input");
         div.classList = `input-wrap`;
+        select.classList = `linkType`;
         select.id = `link-type${$(".list").length}`;
         select.name = `linkType`;
         option1.value = "BrowserOpen";
@@ -281,6 +281,7 @@
         option4.innerText = "event";
         option5.innerText = "coupon";
         option6.innerText = "saeun";
+        input2.classList = `linkUrl`;
         input2.id = `link-url${$(".list").length}`;
         input2.type = "text";
         input2.placeholder = "url을 적어주세요.";
@@ -342,7 +343,12 @@
         list.appendChild(li);
         li.appendChild(button);
 
-        console.log(size);
+        // if ($(".list-wrap").children().hasClass("tab-area")) {
+        //   addElement(tabList);
+        // } else {
+        //   addElement(list);
+        // }
+
         if (type == "normal") {
           //일반타입
           for (let i = 0; i < size; i++) {

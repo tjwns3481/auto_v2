@@ -101,9 +101,11 @@ section {
   display: block;
 }
 html {
+  overflow-x: hidden;
   padding-bottom: 10vw;
 }
 body {
+  padding: 5vw;
   line-height: 1;
 }
 ol,
@@ -124,10 +126,6 @@ q:after {
 table {
   border-collapse: collapse;
   border-spacing: 0;
-}
-body {
-  overflow-x: hidden;
-  padding: 5vw;
 }
 h1 {
   font-size: 2rem;
@@ -210,7 +208,7 @@ img {
   z-index: 111;
 }
 .listLink label {
-  height: calc(100% - 5vw);
+  /* height: calc(100% - 5vw); */
 }
 .listTab {
   display: flex;
@@ -310,19 +308,22 @@ img {
   background-size: contain;
 }
 .input-wrap {
-  width: 100%;
+  width: 70%;
   position: absolute;
   height: 5vw;
+  left: 50%;
   bottom: 0;
   font-size: 0;
   text-align: center;
+  transform: translateX(-50%);
+  z-index: 1111;
 }
-#link-type {
+.link-type {
   box-sizing: border-box;
   height: 5vw;
-  display: inline-block;
+  display: inline-block !important;
 }
-#link-url {
+.link-url {
   box-sizing: border-box;
   padding: 0 !important;
   height: 5vw;
