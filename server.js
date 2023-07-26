@@ -19,9 +19,11 @@ month < 10 ? (realMonth = "0" + month) : (realMonth = month.toString());
 const realDate = realYear + realMonth + realDay;
 
 let extName = [];
-let osTypes = ["app", "pc", "kiosk"];
+const osTypes = ["app", "pc", "kiosk"];
 let newHtmlLink = ``;
 let newHtmlImg = ``;
+
+let mkdirIntime = () => {};
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
@@ -29,13 +31,16 @@ app.use(express.urlencoded({ extended: true }));
 osTypes.forEach((t) => {
   const dirPath = path.join(desktopPath, `html_${realDate}sn_${t}`);
 
-  schedule.scheduleJob("01 24 * * *", function () {
-    console.log("디렉토리 생성");
-    fs.mkdirSync(dirPath, { recursive: true });
-    fs.mkdirSync(path.join(dirPath, "css"), { recursive: true });
-    fs.mkdirSync(path.join(dirPath, "images"), { recursive: true });
-    fs.mkdirSync(path.join(dirPath, "js"), { recursive: true });
-  });
+  mkdirIntime = () => {
+    schedule.scheduleJob("01 24 * * *", function () {
+      console.log("디렉토리 생성");
+      fs.mkdirSync(dirPath, { recursive: true });
+      fs.mkdirSync(path.join(dirPath, "css"), { recursive: true });
+      fs.mkdirSync(path.join(dirPath, "images"), { recursive: true });
+      fs.mkdirSync(path.join(dirPath, "js"), { recursive: true });
+    });
+  };
+
   // Set ready dir
 
   fs.mkdirSync(dirPath, { recursive: true });
@@ -81,10 +86,9 @@ osTypes.forEach((t) => {
         linkId.map((item, idx) => {
           if (i == item) {
             newHtmlImg += `
-      <a href="#none" id="link${i}">
+      <a href="#none" id="link${item}">
         <img src="./images/img${i + 1}${extName[0]}"/>
-      </a>
-`;
+      </a>`;
           }
         });
       }
@@ -94,8 +98,7 @@ osTypes.forEach((t) => {
           newHtmlImg += `
       <div class="img_box">
         <img src="./images/img${i + 1}${extName[0]}"/>
-      </div>
-`;
+      </div>`;
         }
       });
     }
@@ -288,6 +291,7 @@ osTypes.forEach((t) => {
     archive.finalize();
   });
 });
+mkdirIntime();
 
 app.listen(3000, () => {
   console.log("Server started on port 3000");
