@@ -52,6 +52,13 @@ osTypes.forEach((t) => {
     },
     filename: (req, file, cb) => {
       extName.push(path.extname(file.originalname));
+      const tabIdx = Number(req.query.tabIdx.split(""));
+      const tabSize = req.query.tabSize;
+      // console.log(tabIdx);
+      console.log(req.files[tabIdx]);
+
+      if (file) {
+      }
       cb(null, "img" + req.files.length + path.extname(file.originalname));
     },
   });
@@ -62,6 +69,7 @@ osTypes.forEach((t) => {
     newHtmlLink = ""; //linkSetting 초기화
     newHtmlImg = ""; //imgBox 초기화
     tabImg = "";
+    tabArea = "";
     tabsize = "";
     hiddenArea = "";
     const tabSize = req.query.tabSize;
@@ -87,68 +95,76 @@ osTypes.forEach((t) => {
         }
       }
 
-      console.log(`linkIdx = ${linkId}`);
-      console.log(`tabIdx = ${tabId}`);
-      console.log(`normalId = ${normalId}`);
-      console.log(`total = ${total}`);
+      // console.log(`linkIdx = ${linkId}`);
+      // console.log(`tabIdx = ${tabId}`);
+      // console.log(`normalId = ${normalId}`);
+      // console.log(`total = ${total}`);
 
-      for (let i = 0; i < total; i++) {
-        console.log(req.files.length);
-        normalId.map((item, idx) => {
-          if (i == item) {
-            tabImg += `
-              <div class="img_box">
-                <img src="./images/img${i + 1}${extName[i]}"/>
-              </div>
-            `;
-            hiddenArea += `
-              <div class="hidden-area">
-                ${tabImg}
-              </div>
-            `;
-          }
-        });
-
-        tabId.map((item, idx) => {
-          if (i == item) {
-            for (let j = 0; j < tabSize; j++) {
-              tabsize += `
-              <a href="#none">
-                <img src="./images/img${i + 1}${extName[i]}">
-              </a>
-            `;
-            }
-
-            tabArea = `
-            <div class="tab-area">
-              <div class="tab-menu>
-                ${tabsize}
-              </div>
-              ${hiddenArea}
-            </div>
-            `;
-          }
-        });
-        if (t !== "kiosk") {
-          linkId.map((item, idx) => {
-            if (i == item) {
-              if (linkId.length < 2) {
-                tabImg += `
-                <a href="#none" id="link1">
-                  <img src="./images/img${i + 1}${extName[i]}"/>
-                </a>
-              `;
-              } else {
-                tabImg += `
-                <a href="#none" id="link${item}">
-                  <img src="./images/img${i + 1}${extName[i]}"/>
-                </a>
-              `;
-              }
-            }
-          });
+      req.files.map((item, idx) => {
+        let imgTag = `<img src="./images/img${idx + 1}${extName[idx]}"/>`;
+        if (idx == tabId) {
+          for (let i = 0; i < tabSize; i++) {}
         }
-      }
+        // console.log(`idx = ${idx}`);
+        // console.log(imgTag);
+      });
+      // for (let i = 0; i < total; i++) {
+      //   console.log(req.files.length);
+      //   normalId.map((item, idx) => {
+      //     if (i == item) {
+      //       tabImg += `
+      //         <div class="img_box">
+      //           <img src="./images/img${i + 1}${extName[i]}"/>
+      //         </div>
+      //       `;
+      //       hiddenArea += `
+      //         <div class="hidden-area">
+      //           ${tabImg}
+      //         </div>
+      //       `;
+      //     }
+      //   });
+
+      //   tabId.map((item, idx) => {
+      //     if (i == item) {
+      //       for (let j = 0; j < tabSize; j++) {
+      //         tabsize += `
+      //         <a href="#none">
+      //           <img src="./images/img${i + 1}${extName[i]}">
+      //         </a>
+      //       `;
+      //       }
+
+      //       tabArea = `
+      //       <div class="tab-area">
+      //         <div class="tab-menu>
+      //           ${tabsize}
+      //         </div>
+      //         ${hiddenArea}
+      //       </div>
+      //       `;
+      //     }
+      //   });
+      //   if (t !== "kiosk") {
+      //     linkId.map((item, idx) => {
+      //       if (i == item) {
+      //         if (linkId.length < 2) {
+      //           tabImg += `
+      //           <a href="#none" id="link1">
+      //             <img src="./images/img${i + 1}${extName[i]}"/>
+      //           </a>
+      //         `;
+      //         } else {
+      //           tabImg += `
+      //           <a href="#none" id="link${item}">
+      //             <img src="./images/img${i + 1}${extName[i]}"/>
+      //           </a>
+      //         `;
+      //         }
+      //       }
+      //     });
+      //   }
+      // }
       const tabHtml = `
     <!DOCTYPE html>
     <html lang="en">
@@ -205,7 +221,6 @@ osTypes.forEach((t) => {
       </body>
     </html>
     `;
-      console.log(tabHtml);
       const tabCss = `
     html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {margin: 0;padding: 0;border: 0;font-size: 100%;font: inherit;vertical-align: baseline;}
     article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {display: block;} body {line-height: 1;} ol, ul {list-style: none;} blockquote, q {quotes: none;} blockquote:before, blockquote:after, q:before, q:after {content: '';content: none;} table {border-collapse: collapse;border-spacing: 0;} .eventBox {width:100%; overflow-x:hidden;} img{width:100%; display:block} #link1 {display:block;}
