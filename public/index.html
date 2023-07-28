@@ -72,20 +72,25 @@
             e.preventDefault();
             let linkIdx = "";
             let linkType = "";
+            let tabIdx = "";
             let linkUrl = "";
             let normalTypeIdx = "";
             let totalIdx = "";
+            let isTab = $(".list-wrap").children().hasClass("tab-area");
+            let tabSize = $("#tabSize").val();
             $(".list").map((idx, list) => {
               if ($(list).hasClass("listLink")) {
                 linkType = $(list).children(".input-wrap").children("select").val();
                 linkUrl = $(list).children(".input-wrap").children("input").val();
                 linkIdx += idx;
-              } else {
+              } else if ($(list).hasClass("listImg")) {
                 normalTypeIdx += idx;
+              } else if ($(list).hasClass("listTab")) {
+                tabIdx += idx;
               }
               totalIdx = $(".list").length;
             });
-            const selectedOsType = `app?linkId=${linkIdx}&normalTypeIdx=${normalTypeIdx}&totalIdx=${totalIdx}`;
+            const selectedOsType = `app?linkId=${linkIdx}&normalTypeIdx=${normalTypeIdx}&totalIdx=${totalIdx}&isTab=${isTab}&tabIdx=${tabIdx}&tabSize=${tabSize}`;
 
             // 업로드를 처리할 엔드포인트 경로 설정
             const uploadEndpoint = `/download_${selectedOsType}`;
@@ -104,6 +109,8 @@
             let linkUrl = "";
             let normalTypeIdx = "";
             let totalIdx = "";
+            let isTab = false;
+
             $(".list").map((idx, list) => {
               if ($(list).hasClass("listLink")) {
                 linkType = $(list).children(".input-wrap").children("select").val();
@@ -195,8 +202,6 @@
 
           reader.onload = function (e) {
             if ($(input).parent().parent().parent().hasClass("hidden-area")) {
-              // console.log($(`.list-wrap .tab-area .hidden-area.on .list:eq(${idx}) img`));
-              console.log($(input).parent().parent().index());
               $(`.list-wrap .tab-area .hidden-area.on .list:eq(${idx}) img`).attr("src", e.target.result);
             } else if ($(input).parent().hasClass("tab_btn")) {
               $(`.list-wrap .tab_a:eq(${idx - 1}) > .tab_btn:eq(${childIdx}) img`).attr("src", e.target.result);
@@ -296,9 +301,15 @@
         option6.innerText = "saeun";
         input2.classList = `linkUrl`;
 
+        console.log(length);
         if ($(list).children().hasClass("listTab")) {
-          input.id = `pick_link${length + 1}`;
-          label.htmlFor = `pick_link${length + 1}`;
+          if ($(list).children().hasClass("listLink")) {
+            input.id = `pick_link${length + 2}`;
+            label.htmlFor = `pick_link${length + 2}`;
+          } else {
+            input.id = `pick_link${length + 1}`;
+            label.htmlFor = `pick_link${length + 1}`;
+          }
         } else {
           input.id = `pick_link${list.children.length}`;
           label.htmlFor = `pick_link${list.children.length}`;
