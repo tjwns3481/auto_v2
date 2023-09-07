@@ -28,14 +28,14 @@ let tabsize = ``;
 let hiddenArea = ``;
 
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.json());
+// app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 osTypes.forEach((t) => {
   const dirPath = path.join(desktopPath, `html_${realDate}sn_${t}`);
   const imgPath = path.join(dirPath, "images");
 
   fs.rmdir(imgPath, { recursive: true }, (err) => {
-    console.log(`error : ` + err);
+    if (err) console.log(`error : ` + err);
   });
 
   // Set ready dir
@@ -54,11 +54,7 @@ osTypes.forEach((t) => {
       extName.push(path.extname(file.originalname));
       const tabIdx = Number(req.query.tabIdx.split(""));
       const tabSize = req.query.tabSize;
-      // console.log(tabIdx);
-      console.log(req.files[tabIdx]);
 
-      if (file) {
-      }
       cb(null, "img" + req.files.length + path.extname(file.originalname));
     },
   });
@@ -187,13 +183,9 @@ osTypes.forEach((t) => {
       </script>
       </head>
       <body>
-        <div class="canvas">
-          <div class="container">
-            <div class="eventBox">
-            ${tabImg}
-            ${tabArea}
-            </div>
-          </div>
+        <div class="eventBox">
+        ${tabImg}
+        ${tabArea}
         </div>
         <script>
           $(".tab-menu a").on("click", function () {
@@ -369,12 +361,8 @@ osTypes.forEach((t) => {
       </script>
       </head>
       <body>
-        <div class="canvas">
-          <div class="container">
-            <div class="eventBox">
-              ${newHtmlImg}
-            </div>
-          </div>
+        <div class="eventBox">
+          ${newHtmlImg}
         </div>
       </body>
     </html>
